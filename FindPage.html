@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOVEGRAM - Find</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0f172a 50%, #000000 100%);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* LEFT SIDEBAR */
+        .sidebar {
+            width: 14rem;
+            background: linear-gradient(180deg, #000000 0%, #0f172a 50%, #020617 100%);
+            border-right: 1px solid #1e293b;
+            display: flex;
+            flex-col;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            fill: #ec4899;
+            color: #ec4899;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-text .love {
+            color: #ffffff;
+        }
+
+        .logo-text .gram {
+            color: #ec4899;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            flex: 1;
+            padding: 1.5rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: transparent;
+            border: none;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(148, 163, 184, 0.1);
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0.3) 0%, rgba(236, 72, 153, 0.1) 100%);
+            color: #f472b6;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            padding: 1rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background: transparent;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .profile-button:hover {
+            background-color: rgba(148, 163, 184, 0.1);
+        }
+
+        .profile-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+            text-align: left;
+            min-width: 0;
+        }
+
+        .profile-username {
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: block;
+            white-space: nowrap;
+        }
+
+        .profile-link {
+            font-size: 0.75rem;
+            color: #f472b6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            white-space: nowrap;
+        }
+
+        .profile-link:hover {
+            color: #fce7f3;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #0f172a 0%, #000000 50%, #0f172a 100%);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        /* User List */
+        .user-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            padding-bottom: 8rem;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-item:hover {
+            background-color: rgba(148, 163, 184, 0.1);
+        }
+
+        .user-item:hover .user-avatar {
+            border-color: #ec4899;
+        }
+
+        .user-item:hover .user-arrow {
+            color: #ec4899;
+            transform: translateX(0.25rem);
+        }
+
+        .user-item:hover .user-handle {
+            color: #f472b6;
+        }
+
+        .user-avatar {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 9999px;
+            border: 2px solid rgba(236, 72, 153, 0.5);
+            object-fit: cover;
+            flex-shrink: 0;
+            position: relative;
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        .user-handle {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #ffffff;
+            flex: 1;
+            transition: color 0.3s ease;
+        }
+
+        .user-arrow {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #6b7280;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .user-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(71, 85, 105, 0.3), transparent);
+            margin: 0.5rem 0;
+        }
+
+        /* Search Bar - Fixed Bottom */
+        .search-container {
+            position: fixed;
+            bottom: 0;
+            left: 14rem;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(180deg, transparent 0%, #000000 50%, #000000 100%);
+            z-index: 10;
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #6b7280;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 9999px;
+            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            color: #ffffff;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .search-input::placeholder {
+            color: #6b7280;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(236, 72, 153, 0.5);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+            background-color: rgba(15, 23, 42, 0.95);
+        }
+
+        /* Scrollbar Styling */
+        .user-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .user-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .user-list::-webkit-scrollbar-thumb {
+            background: rgba(236, 72, 153, 0.3);
+            border-radius: 3px;
+        }
+
+        .user-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(236, 72, 153, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                position: fixed;
+                left: -14rem;
+                height: 100vh;
+                z-index: 100;
+            }
+
+            .search-container {
+                left: 0;
+            }
+
+            .header h1 {
+                font-size: 1.875rem;
+            }
+
+            .user-list {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <!-- Logo -->
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span class="logo-text">
+                    <span class="love">LOVE</span><span class="gram">GRAM</span>
+                </span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="nav-menu">
+                <button class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    Menu
+                </button>
+                <button class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Chat
+                </button>
+                <button class="nav-item active">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    Find
+                </button>
+                <button class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Profile
+                </button>
+            </nav>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <button class="profile-button">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53a8681c3a86?w=48&h=48&fit=crop" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <span class="profile-username">@oygul</span>
+                        <a href="#" class="profile-link">View my profile</a>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Find</h1>
+            </div>
+
+            <!-- User List -->
+            <div class="user-list">
+                <div class="user-item">
+                    <img src="https://images.unsplash.com/photo-1494890112c0-5a5efb2e7e8c?w=56&h=56&fit=crop" alt="Guli" class="user-avatar">
+                    <span class="user-handle">@guli</span>
+                    <svg class="user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="user-divider"></div>
+
+                <div class="user-item">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=56&h=56&fit=crop" alt="Jeneferlopez" class="user-avatar">
+                    <span class="user-handle">@jeneferlopez</span>
+                    <svg class="user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="user-divider"></div>
+
+                <div class="user-item">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=56&h=56&fit=crop" alt="Janona" class="user-avatar">
+                    <span class="user-handle">@janona</span>
+                    <svg class="user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="user-divider"></div>
+
+                <div class="user-item">
+                    <img src="https://images.unsplash.com/photo-1517849845537-1d51a20414de?w=56&h=56&fit=crop" alt="Aziza" class="user-avatar">
+                    <span class="user-handle">@aziza</span>
+                    <svg class="user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="user-divider"></div>
+
+                <div class="user-item">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=56&h=56&fit=crop" alt="Kamila" class="user-avatar">
+                    <span class="user-handle">@kamila</span>
+                    <svg class="user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Qidirish uchun...">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add interactivity
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // User item click
+        document.querySelectorAll('.user-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const username = this.querySelector('.user-handle').textContent;
+                console.log('Clicked:', username);
+                // Add navigation logic here
+            });
+        });
+    </script>
+</body>
+</html>
